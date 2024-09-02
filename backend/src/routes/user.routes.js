@@ -13,14 +13,14 @@ router.route("/register").post(
     registerUser
 )
 router.route('/login').post(loginUser)
-router.route('/refresh-token').post( refreshAccessToken)
+router.route('/refresh-token').put( refreshAccessToken)
 
 // secured routes
 router.route('/logout'). put( verifyJWT, logoutUser)
-router.route('change-password').put(verifyJWT, changeCurrentPassword)
+router.route('/change-password').put(verifyJWT, changeCurrentPassword)
 router.route('/getUser').get(verifyJWT, getCurrentUser)
 router.route('/change-details').put(verifyJWT, changeAccountDetails)
-router.route('/change-avater').put(verifyJWT, upload.fields([{
+router.route('/change-avatar').put(verifyJWT, upload.fields([{
     name: 'avatar',
     maxCount: 1
 }]) , changeUserAvatar)

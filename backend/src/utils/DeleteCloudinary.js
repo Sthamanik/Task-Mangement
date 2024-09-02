@@ -14,13 +14,13 @@ const deleteOnCloudinary = async (filePath) => {
         if (!filePath ) return null
 
         const response = await cloudinary.uploader.destroy( filePath, {
-            resource_type: "auto"
+            resource_type: "image"
         })
 
         return response;
 
     } catch (error) {
-        throw error
+        throw error.message
     }
 }
 export {deleteOnCloudinary}

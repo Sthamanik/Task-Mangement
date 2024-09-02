@@ -5,6 +5,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js"
 import { ApiResponse } from "../utils/ApiResponse.js"
 import path from 'path'
 import jwt from "jsonwebtoken"
+import { deleteOnCloudinary } from "../utils/DeleteCloudinary.js";
 
 const options = {
     httpOnly: true,
@@ -141,6 +142,8 @@ const refreshAccessToken = asyncHandler ( async (req, res) => {
 const changeCurrentPassword = asyncHandler ( async ( req, res) => {
     const {oldPassword , newPassword } = req.body;
 
+    if ( oldPassword === newPassword ) throw new ApiError(400, "passwords must be different")
+
     const user = await User.findById(req.user?._id)
     const isPasswordCorrect = await user.isPasswordCorrect(oldPassword)
 
@@ -176,7 +179,7 @@ const changeAccountDetails = asyncHandler ( async (req, res) => {
 })
 
 const changeUserAvatar = asyncHandler( async (req, res) => {
-    const avatarLocalPath = req.file?.path
+    const avatarLocalPath = path.normalize(req.files?.avatar[0]?.path)
 
     if ( !avatarLocalPath) throw new ApiError( 400, "Avatar file is missing")
 
@@ -184,7 +187,10 @@ const changeUserAvatar = asyncHandler( async (req, res) => {
     if (!user) throw new ApiError(404, "User not found");
 
     if (user.avatar) {
-        const deleteResponse = await deleteOnCloudinary(user.avatar);
+        const parts = user.avatar.split('/');
+        const publicIdWithExtension = parts[parts.length - 1]; 
+        const publicId = publicIdWithExtension.split('.')[0];
+        const deleteResponse = await deleteOnCloudinary(publicId);
         if (deleteResponse.result !== 'ok') {
             throw new ApiError(400, "Error while deleting the old avatar");
         }
