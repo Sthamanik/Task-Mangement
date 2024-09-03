@@ -13,6 +13,14 @@ const taskSchema = new Schema (
         createdBy: {
             type: Schema.Types.ObjectId,
             ref: "User"
+        },
+        isCompleted: {
+            type: Boolean,
+            default: false
+        },
+        scheduledAt: {
+            type: String,
+            required: true
         }
     },
     {
