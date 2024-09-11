@@ -48,10 +48,6 @@ const registerUser = asyncHandler( async (req, res) => {
 
     existingUser = await User.findOne({username})
     if ( existingUser ) throw new ApiError( 409, "User with the same username exists")
-    
-    // check for avatar
-    const avatarLocalPath = path.normalize(req.files?.avatar[0]?.path)
-    if (!avatarLocalPath ) throw new ApiError( 400, "Avatar is required")
 
     // upload to cloudinary
     const avatar = await uploadOnCloudinary(avatarLocalPath)
@@ -178,7 +174,7 @@ const changeAccountDetails = asyncHandler ( async (req, res) => {
     .json (new ApiResponse(200, user, "Updated Account Details"))
 })
 
-const changeUserAvatar = asyncHandler( async (req, res) => {
+const setUserAvatar = asyncHandler( async (req, res) => {
     const avatarLocalPath = path.normalize(req.files?.avatar[0]?.path)
 
     if ( !avatarLocalPath) throw new ApiError( 400, "Avatar file is missing")
@@ -219,5 +215,5 @@ export {
     changeCurrentPassword,
     getCurrentUser,
     changeAccountDetails,
-    changeUserAvatar
+    setUserAvatar
 }
