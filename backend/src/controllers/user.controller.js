@@ -32,11 +32,11 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 const registerUser = asyncHandler( async (req, res) => {
     // get the user details 
-    const {fullName, email, username, password} = req.body;
+    const {email, username, password} = req.body;
 
     // validation - not empty
     if (
-        [fullName, email, username, password].some((feild) =>
+        [email, username, password].some((feild) =>
             feild?.trim() === "")
     ){
         throw new ApiError (400, "All fields are required")
@@ -46,16 +46,12 @@ const registerUser = asyncHandler( async (req, res) => {
     let existingUser = await User.findOne({email})
     if ( existingUser ) throw new ApiError( 409, "User with the same email exists")
 
-    existingUser = await User.findOne({username})
-    if ( existingUser ) throw new ApiError( 409, "User with the same username exists")
-
     // upload to cloudinary
     const avatar = await uploadOnCloudinary(avatarLocalPath)
     if (!avatar ) throw new ApiError( 400, "Failed To Upload Avatar")
     
     // create the user object
     const user = await User.create({
-        fullName,
         avatar: avatar.url,
         email, 
         password,
@@ -73,15 +69,13 @@ const registerUser = asyncHandler( async (req, res) => {
 })
 
 const loginUser = asyncHandler ( async (req, res) => {
-    const {credential, password} = req.body;
+    const {email, password} = req.body;
 
     if ( !credential) {
         throw new ApiError( 400, "username or email cannot be empty")
     }
 
-    const user = await User.findOne ({
-        $or: [{username: credential}, {email: credential} ]
-    })
+    const user = await User.findOne ({email})
 
     if (!user) throw new ApiError(404, "User doesn't exist")
     
@@ -158,14 +152,14 @@ const getCurrentUser = asyncHandler ( async ( req, res )=> {
 })
 
 const changeAccountDetails = asyncHandler ( async (req, res) => {
-    const {fullName, email}= req.body
+    const {username, email}= req.body
 
-    if (!fullName || !email) throw new ApiError(400, "All feilds are required")
+    if (!username || !email) throw new ApiError(400, "All feilds are required")
 
     const user = await User.findByIdAndUpdate( 
         req.user?._id,
         {
-            $set: {fullName, email}
+            $set: {username, email}
         },
         { new: true }
     ).select("-password -refreshToken")
