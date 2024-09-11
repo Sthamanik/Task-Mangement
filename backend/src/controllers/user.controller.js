@@ -45,14 +45,9 @@ const registerUser = asyncHandler( async (req, res) => {
     // check whether the user already exists or not 
     let existingUser = await User.findOne({email})
     if ( existingUser ) throw new ApiError( 409, "User with the same email exists")
-
-    // upload to cloudinary
-    const avatar = await uploadOnCloudinary(avatarLocalPath)
-    if (!avatar ) throw new ApiError( 400, "Failed To Upload Avatar")
     
     // create the user object
     const user = await User.create({
-        avatar: avatar.url,
         email, 
         password,
         username
@@ -71,8 +66,8 @@ const registerUser = asyncHandler( async (req, res) => {
 const loginUser = asyncHandler ( async (req, res) => {
     const {email, password} = req.body;
 
-    if ( !credential) {
-        throw new ApiError( 400, "username or email cannot be empty")
+    if ( !email) {
+        throw new ApiError( 400, "Email cannot be empty")
     }
 
     const user = await User.findOne ({email})
