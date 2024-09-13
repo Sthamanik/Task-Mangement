@@ -5,12 +5,12 @@ import axios from "axios";
 const UserContextProvider = ({ children }) => {
   const server = import.meta.env.VITE_HOST;
   const [user, setUser] = useState(null);
-  const [error, setError] = useState(null);  // Fixed typo here
+  const [error, setError] = useState(null); 
 
   const signupUser = async (userData) => {
     try {
       const response = await axios.post(`${server}/users/register`, userData);
-      setUser(response.data.user);
+      setUser(response.data.data.user);
       setError(null);
       return response.data;
     } catch (error) {
@@ -30,9 +30,11 @@ const UserContextProvider = ({ children }) => {
   const loginUser = async (userData) => {
     try {
       const response = await axios.post (`${server}/users/login`, userData);
-      setUser(response.data.user);
-      localStorage.setItem("accessToken", response.data.accessToken);
-      localStorage.setItem("refreshToken", response.data.refreshToken);
+      setUser(response.data.data.user);
+      console.log(response.data.data.user)
+      localStorage.setItem("user", JSON.stringify(response.data.data.user));
+      localStorage.setItem("accessToken", response.data.data.accessToken);
+      localStorage.setItem("refreshToken", response.data.data.refreshToken);
       setError(null);
       return response.data;
     } catch (error) {
@@ -49,9 +51,28 @@ const UserContextProvider = ({ children }) => {
     }
   }
 
+  const logoutUser= async () => {
+    try {
+      const response = await axios.put(`${server}/users/logout`, null, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+      setUser(null);
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      return response.data;
+    } catch (error) {
+      console.error("Error logging out user:", error);
+    }
+  }
+
   const values = {
     signupUser,
     loginUser,
+    logoutUser,
+    user,
     error  // Expose error if needed
   };
 

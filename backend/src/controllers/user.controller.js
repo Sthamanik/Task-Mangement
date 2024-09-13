@@ -171,7 +171,7 @@ const setUserAvatar = asyncHandler( async (req, res) => {
     const user = await User.findById(req.user?._id);
     if (!user) throw new ApiError(404, "User not found");
 
-    if (user.avatar) {
+    if (user.avatar !== 'none') {
         const parts = user.avatar.split('/');
         const publicIdWithExtension = parts[parts.length - 1]; 
         const publicId = publicIdWithExtension.split('.')[0];

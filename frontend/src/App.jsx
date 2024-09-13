@@ -8,7 +8,7 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/*" element= {<AuthConatainer/>}/>
-        <Route path="/taskify/*" element= {<Applayout/>} />
+        <Route path="/dashboard/*" element= {<Applayout/>} />
       </Routes>
     </BrowserRouter>
   )
