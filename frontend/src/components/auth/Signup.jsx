@@ -148,7 +148,7 @@ const Signup = () => {
       try {
         const result = await signupUser(user);
         if (result.success) {
-          navigate('/login');
+          navigate('/');
         } else {
           setErrors((prevErrors) => ({ ...prevErrors, form: result.message || "Signup failed. Please try again." }));
           setErrorTimeout(setTimeout(() => {
@@ -273,7 +273,7 @@ const Signup = () => {
               </button>
             </div>
           </form>
-          <p className="text-gray-600">Already have an account? <Link to="/login" className="font-semibold text-indigo-600 underline underline-offset-2 hover:text-indigo-400">Login</Link></p>
+          <p className="text-gray-600">Already have an account? <Link to="/" className="font-semibold text-indigo-600 underline underline-offset-2 hover:text-indigo-400">Login</Link></p>
         </div>
       </div>
   );
