@@ -6,7 +6,7 @@ const Profile = () => {
   const profilePic = user.avatar;
 
   return (
-    <div className="rounded-r-2xl p-6 shadow-lg w-full max-w-4xl mx-auto">
+    <div className="rounded-r-2xl flex flex-col p-6">
       {/* Profile Header */}
       <div className="flex items-center justify-between pb-6 border-b border-black">
         <div className="flex items-center space-x-6">
@@ -31,18 +31,22 @@ const Profile = () => {
       </div>
 
       {/* Task Overview Section */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
         <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
           <h3 className="text-lg font-semibold text-gray-600">Total Tasks</h3>
-          <p className="text-3xl font-bold text-green-500 mt-2">45</p>
+          <p className="text-3xl font-bold text-cyan-600 mt-2">45</p>
         </div>
         <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
           <h3 className="text-lg font-semibold text-gray-600">Completed Tasks</h3>
-          <p className="text-3xl font-bold text-blue-500 mt-2">30</p>
+          <p className="text-3xl font-bold text-green-600 mt-2">30</p>
         </div>
         <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
           <h3 className="text-lg font-semibold text-gray-600">Pending Tasks</h3>
-          <p className="text-3xl font-bold text-red-500 mt-2">15</p>
+          <p className="text-3xl font-bold text-red-600 mt-2">13</p>
+        </div>
+        <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
+          <h3 className="text-lg font-semibold text-gray-600">Archived Tasks</h3>
+          <p className="text-3xl font-bold text-blue-600 mt-2">2</p>
         </div>
       </div>
 
@@ -66,7 +70,7 @@ const Profile = () => {
       </div>
 
       {/* Achievements Section */}
-      <div className="mt-6 p-4">
+      <div className="p-4 w-full">
         <h3 className="font-semibold mb-2">Achievements</h3>
         <p className="text-gray-800">
           You’ve completed <span className="font-bold">30 tasks</span> this month!

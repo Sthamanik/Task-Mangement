@@ -31,7 +31,6 @@ const UserContextProvider = ({ children }) => {
     try {
       const response = await axios.post (`${server}/users/login`, userData);
       setUser(response.data.data.user);
-      console.log(response.data.data.user)
       localStorage.setItem("user", JSON.stringify(response.data.data.user));
       localStorage.setItem("accessToken", response.data.data.accessToken);
       localStorage.setItem("refreshToken", response.data.data.refreshToken);

@@ -95,7 +95,7 @@ const Login = () => {
       try {
         const result = await loginUser(data); // Assuming loginUser function is provided by context
         if (result.success) {
-          navigate("/home"); // Redirect to dashboard or desired route
+          navigate("/app/tasks/pending"); // Redirect to dashboard or desired route
         } else {
           setErrors((prevErrors) => ({
             ...prevErrors,

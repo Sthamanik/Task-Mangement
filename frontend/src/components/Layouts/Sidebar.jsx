@@ -22,7 +22,7 @@ const Sidebar = () => {
 
   }
   return (
-    <div className='flex flex-col justify-between h-full rounded-l-2xl bg-slate-300 sm:w-1/3 lg:w-1/4 xl:w-1/4 2xl:w-1/4 py-2 px-3'>
+    <div className='flex flex-col justify-between h-full rounded-l-2xl bg-slate-300 md:w-1/5 py-2 px-3'>
       <div>
         <div className='mb-4 flex items-center justify-between'>
           <p className='text-xl font-bold tracking-wide'>Menu</p>
@@ -38,7 +38,7 @@ const Sidebar = () => {
           />
           <Search className='absolute right-3 text-gray-600 hover:text-black hover:cursor-pointer' />
         </div>
-        <Link to="#" className='flex space-x-2 mb-2 text-gray-700 hover:text-black'>
+        <Link to="/app/profile" className='flex space-x-2 mb-2 text-gray-700 hover:text-black'>
           <UserCircle/>
           <p className="font-semibold tracking-wide">Profile</p>
         </Link>
@@ -55,7 +55,7 @@ const Sidebar = () => {
             </div>
             <ChevronsRight/>
           </Link>
-          <Link to="/dashboard/" className='flex justify-between items-center text-gray-700 hover:text-red-600'>
+          <Link to="/app/tasks/pending" className='flex justify-between items-center text-gray-700 hover:text-red-600'>
             <div className='flex space-x-2'>
               <AlertCircle/>
               <p className='font-semibold tracking-wide'>Pending</p>
@@ -64,7 +64,7 @@ const Sidebar = () => {
               <p className='font-bold text-slate-300'>6</p>
             </div>
           </Link>
-          <Link to="/dashboard/completed" className='flex justify-between items-center space-x-2 text-gray-700 hover:text-green-600'>
+          <Link to="/app/tasks/completed" className='flex justify-between items-center space-x-2 text-gray-700 hover:text-green-600'>
             <div className='flex space-x-2'>
               <CheckCircle/>
               <p className='font-semibold tracking-wide'>Completed</p>
@@ -73,7 +73,7 @@ const Sidebar = () => {
               <p className='font-bold text-slate-300'>5</p>
             </div>
           </Link>
-          <Link to="/dashboard/archived" className='flex justify-between items-center space-x-2 text-gray-700 hover:text-blue-600'>
+          <Link to="/app/tasks/archived" className='flex justify-between items-center space-x-2 text-gray-700 hover:text-blue-600'>
             <div className='flex space-x-2'>
               <PackageOpen/>
               <p className='font-semibold tracking-wide'>Archived</p>

@@ -2,10 +2,10 @@ import React, { useContext, useEffect } from 'react'
 import Sidebar from './Sidebar'
 import image from '../../assets/img/profile.png'
 import logo from '../../assets/img/image.png'
-import { Routes, useNavigate } from 'react-router-dom'
-import Tasklayout from './Tasks/Tasklayout'
+import { Route, Routes, useNavigate } from 'react-router-dom'
 import Profile from './Profile'
-import { Route } from 'lucide-react'
+import PendingTasks from './Tasks/PendingTasks'
+import Completed from './Tasks/Completed'
 
 const Applayout = () => {
   const navigate = useNavigate()
@@ -19,13 +19,19 @@ const Applayout = () => {
   }
 
   const user = JSON.parse(localStorage.getItem('user'));
-  const avatar = (user.avatar !== "none") ? user.avatar : image;
-  const name = capitalize(user.username);
+
   useEffect(() => {
-    if (!localStorage.getItem('accessToken') || !localStorage.getItem('refreshToken')) {
+    if (!localStorage.getItem('accessToken') || !localStorage.getItem('refreshToken') || !user) {
         navigate('/');
     }
-  }, [navigate]);
+  }, [navigate, user]);
+
+  if (!user) {
+    return null;
+  }
+
+  const avatar = user.avatar !== 'none' ? user.avatar : image;
+  const name = capitalize(user.username);
   return (
     <>
     <div className="absolute flex items-center justify-between w-full px-4 py-2">
@@ -42,12 +48,14 @@ const Applayout = () => {
           <p className='mx-5 font-semibold bg-gradient-to-r from-gray-800 via-slate-700 to-black inline-block text-transparent bg-clip-text'>Welcome {name} !!!</p>
       </div>
     </div>
-    <div className='h-dvh w-dvw p-16 flex justify-center items-center bg-gradient-to-bl from-slate-500 via-indigo-400 to-cyan-700'>
+    <div className='h-dvh w-dvw p-16 flex justify-center items-center bg-gradient-to-bl from-slate-500 via-indigo-400 to-cyan-700 overflow-hidden'>
         <div className='h-full w-full bg-white bg-opacity-25 backdrop-filter backdrop-blur-sm rounded-2xl shadow-xl shadow-indigo-800 flex'>
             <Sidebar/>
             <Routes>
-              <Route exact path="/" element={<Tasklayout />} />
-              <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/tasks/pending" element={< PendingTasks/>} />
+            <Route exact path="/tasks/completed" element={< Completed/>} />
+            <Route exact path="/tasks/archived" element={< PendingTasks/>} />
+            <Route exact path="/profile" element={<Profile />} />
             </Routes>
         </div>
     </div>
