@@ -36,7 +36,7 @@ const Sidebar = () => {
             className='w-full h-8 rounded-full p-2 pr-10 text-black focus:outline-none'
             placeholder='Search...'
           />
-          <Search className='text-black absolute right-3' />
+          <Search className='absolute right-3 text-gray-600 hover:text-black hover:cursor-pointer' />
         </div>
         <Link to="#" className='flex space-x-2 mb-2 text-gray-700 hover:text-black'>
           <UserCircle/>
