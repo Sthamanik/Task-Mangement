@@ -8,9 +8,9 @@ import TasksContextprovider from './contexts/tasks/TasksContextprovider.jsx'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <UserContextProvider>
-      {/* <TasksContextprovider> */}
+      <TasksContextprovider>
         <App />
-      {/* </TasksContextprovider> */}
+      </TasksContextprovider>
     </UserContextProvider>
   </StrictMode>,
 )

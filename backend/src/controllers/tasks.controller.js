@@ -4,10 +4,14 @@ import { ApiError } from "../utils/ApiError.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 
 const setTasks = asyncHandler ( async (req, res) => {
-    const {title, description, isCompleted, scheduledAt} = req.body
-    if ( !title || !description || !scheduledAt){
+    const {title, description, isCompleted, scheduledAt, type} = req.body
+    if ( !title || !description || !scheduledAt || !type){
         throw new ApiError (400, "All fields are required")
     }
+
+    if ( type !== 'primary' && type != 'personal' && type !== 'others' )
+        throw new ApiError (400, "Invalid task type. Please select primary, personal or others.")
+
     const scheduledDate = new Date(scheduledAt)
     const currentDate = new Date()
 
@@ -30,7 +34,8 @@ const setTasks = asyncHandler ( async (req, res) => {
         description,
         createdBy: req.user._id,
         isCompleted,
-        scheduledAt
+        scheduledAt,
+        type
     })
 
     return res.status(201).json(
@@ -71,11 +76,13 @@ const getCompletedTasks = asyncHandler (async (req, res) => {
 })
 
 const updateTask = asyncHandler(async (req, res) => {
-    const { title, description, scheduledAt } = req.body;
+    const { title, description, scheduledAt, type} = req.body;
     const { id } = req.query;
 
     if (!id || id.length !== 24) throw new ApiError(400, "Valid Task ID is required");
-    if (!title || !description || !scheduledAt) throw new ApiError(400, "All fields are required");
+    if (!title || !description || !scheduledAt || !type) throw new ApiError(400, "All fields are required");
+    if ( type!== 'primary' && type!= 'personal' && type!== 'others' )
+        throw new ApiError(400, "Invalid task type. Please select primary, personal or others.");
 
     const scheduledDate = new Date(scheduledAt);
     if (new Date() >= scheduledDate) throw new ApiError(400, "The scheduled time must be later than the current time.");
@@ -92,7 +99,7 @@ const updateTask = asyncHandler(async (req, res) => {
             ]
         },
         {
-            $set: { title, description, scheduledAt }
+            $set: { title, description, scheduledAt, type }
         },
         { new: true }
     );

@@ -1,12 +1,13 @@
 import { EditIcon } from 'lucide-react';
 import React from 'react';
 
-const Profile = () => {
+const Profile = ({tasks}) => {
   const user = JSON.parse(localStorage.getItem('user'));
   const profilePic = user.avatar;
+  const totalTasks = Object.values(tasks).reduce((sum, taskCount) => sum + taskCount, 0);
 
   return (
-    <div className="rounded-r-2xl flex flex-col p-6">
+    <div className="rounded-r-2xl flex flex-col p-6 w-4/5">
       {/* Profile Header */}
       <div className="flex items-center justify-between pb-6 border-b border-black">
         <div className="flex items-center space-x-6">
@@ -32,21 +33,21 @@ const Profile = () => {
 
       {/* Task Overview Section */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-        <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
+        <div className="flex flex-col justify-around items-baseline bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
           <h3 className="text-lg font-semibold text-gray-600">Total Tasks</h3>
-          <p className="text-3xl font-bold text-cyan-600 mt-2">45</p>
+          <p className="text-3xl font-bold text-cyan-600 mt-2">{totalTasks}</p>
         </div>
-        <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
+        <div className="flex flex-col justify-around items-baseline bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
           <h3 className="text-lg font-semibold text-gray-600">Completed Tasks</h3>
-          <p className="text-3xl font-bold text-green-600 mt-2">30</p>
+          <p className="text-3xl font-bold text-green-600 mt-2">{tasks.completed}</p>
         </div>
-        <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
+        <div className="flex flex-col justify-around items-baseline bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
           <h3 className="text-lg font-semibold text-gray-600">Pending Tasks</h3>
-          <p className="text-3xl font-bold text-red-600 mt-2">13</p>
+          <p className="text-3xl font-bold text-red-600 mt-2">{tasks.pending}</p>
         </div>
-        <div className="bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
+        <div className="flex flex-col justify-around items-baseline bg-slate-100 p-6 rounded-lg shadow-lg shadow-gray-700 hover:shadow-lg transform transition-all hover:scale-105">
           <h3 className="text-lg font-semibold text-gray-600">Archived Tasks</h3>
-          <p className="text-3xl font-bold text-blue-600 mt-2">2</p>
+          <p className="text-3xl font-bold text-blue-600 mt-2">{tasks.archived}</p>
         </div>
       </div>
 

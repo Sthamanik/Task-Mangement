@@ -1,10 +1,11 @@
 import { AlertCircle, CheckCircle, ChevronsRight, Logs, Menu, PackageOpen, PlusSquare, Power, Search, Settings, UserCircle } from 'lucide-react'
 import React, { useContext} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import UserContext from "../../contexts/users/UserContext";
 
-const Sidebar = () => {
+const Sidebar = ({openTaskPanel, tasks}) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { logoutUser } = useContext(UserContext);
   const handleLogOut = async (e) => {
     e.preventDefault();
@@ -12,12 +13,9 @@ const Sidebar = () => {
         const result = await logoutUser();
         if (result.success) {
             navigate('/')
-            console.log('User logged out successfully');
-        }else{
-            console.error('Failed to log out user:', result.message);
         }
     } catch (error) {
-        
+      console.error('Failed to log out user:', error)
     }
 
   }
@@ -48,38 +46,38 @@ const Sidebar = () => {
         </div>
         <hr className='border-3 border-black mb-3'/>
         <div className='flex flex-col space-y-2'>
-        <Link to="#" className='flex justify-between items-center text-gray-700 hover:text-cyan-600'>
+        <Link to="#" className='flex justify-between items-center text-gray-700 hover:text-cyan-600'  onClick={() => openTaskPanel()}>
             <div className='flex space-x-2'>
               <PlusSquare/>
               <p className='font-semibold tracking-wide'>Add new task</p>
             </div>
             <ChevronsRight/>
           </Link>
-          <Link to="/app/tasks/pending" className='flex justify-between items-center text-gray-700 hover:text-red-600'>
+          <Link to="/app/tasks/pending" className={`flex justify-between items-center ${location.pathname === '/app/tasks/pending' ?'text-red-600' :' text-gray-700  hover:text-red-600 '} `}>
             <div className='flex space-x-2'>
               <AlertCircle/>
               <p className='font-semibold tracking-wide'>Pending</p>
             </div>
             <div className='h-7 w-7 bg-red-600 rounded-full flex items-center justify-center'>
-              <p className='font-bold text-slate-300'>6</p>
+              <p className='font-bold text-slate-300'>{tasks.pending}</p>
             </div>
           </Link>
-          <Link to="/app/tasks/completed" className='flex justify-between items-center space-x-2 text-gray-700 hover:text-green-600'>
+          <Link to="/app/tasks/completed" className={`flex justify-between items-center ${location.pathname === '/app/tasks/completed' ?'text-green-600' :' text-gray-700  hover:text-green-600 '} `}>
             <div className='flex space-x-2'>
               <CheckCircle/>
               <p className='font-semibold tracking-wide'>Completed</p>
             </div>
             <div className='h-7 w-7 bg-green-600 rounded-full flex items-center justify-center'>
-              <p className='font-bold text-slate-300'>5</p>
+              <p className='font-bold text-slate-300'>{tasks.completed}</p>
             </div>
           </Link>
-          <Link to="/app/tasks/archived" className='flex justify-between items-center space-x-2 text-gray-700 hover:text-blue-600'>
+          <Link to="/app/tasks/archived" className={`flex justify-between items-center ${location.pathname === '/app/tasks/archived' ?'text-blue-600' :' text-gray-700  hover:text-blue-600 '} `}>
             <div className='flex space-x-2'>
               <PackageOpen/>
               <p className='font-semibold tracking-wide'>Archived</p>
             </div>
             <div className='h-7 w-7 bg-blue-600 rounded-full flex items-center justify-center'>
-              <p className='font-bold text-slate-300'>0</p>
+              <p className='font-bold text-slate-300'>{tasks.archived}</p>
             </div>
           </Link>
         </div>

@@ -21,7 +21,12 @@ const taskSchema = new Schema (
         scheduledAt: {
             type: String,
             required: true
-        }
+        },
+        type: {
+            type: String,
+            required: true,
+            enum: ["primary", "personal", "others"]
+        },
     },
     {
         timpestamps: true
