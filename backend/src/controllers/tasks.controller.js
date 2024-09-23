@@ -76,7 +76,8 @@ const getCompletedTasks = asyncHandler (async (req, res) => {
 })
 
 const updateTask = asyncHandler(async (req, res) => {
-    const { title, description, scheduledAt, type} = req.body;
+    const { title, description, scheduledAt,isCompleted, type} = req.body;
+    let completedStatus = isCompleted
     const { id } = req.query;
 
     if (!id || id.length !== 24) throw new ApiError(400, "Valid Task ID is required");
@@ -85,21 +86,17 @@ const updateTask = asyncHandler(async (req, res) => {
         throw new ApiError(400, "Invalid task type. Please select primary, personal or others.");
 
     const scheduledDate = new Date(scheduledAt);
-    if (new Date() >= scheduledDate) throw new ApiError(400, "The scheduled time must be later than the current time.");
-
-    const date = scheduledAt.split('T')[0];
+    if (new Date() <= scheduledDate && completedStatus) {
+        completedStatus = false;
+     }
 
     const updatedTask = await Tasks.findOneAndUpdate(
         {
             _id: id,
             createdBy: req.user._id,
-            $or: [
-                { scheduledAt: { $not: { $regex: new RegExp(`^${date}T.*`) } } },
-                { title: { $ne: title } }
-            ]
         },
         {
-            $set: { title, description, scheduledAt, type }
+            $set: { title, description, isCompleted: completedStatus, scheduledAt, type }
         },
         { new: true }
     );

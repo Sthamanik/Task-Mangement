@@ -25,7 +25,6 @@ const TasksContextProvider = ({ children }) => {
     }
   };
 
-  // Function to fetch pending tasks (tasks from today onward)
   const fetchPendingTasks = async () => {
     try {
       const response = await axios.get(`${server}/tasks/getIncompletedTasks`, {
@@ -33,27 +32,24 @@ const TasksContextProvider = ({ children }) => {
           Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
         },
       });
-
+  
       if (response.data && Array.isArray(response.data.data)) {
         const tasks = response.data.data;
-
-        const today = new Date().setHours(0, 0, 0, 0); // Today's date at midnight
-        const pending = tasks.filter(
-          (task) => new Date(task.scheduledAt).setHours(0, 0, 0, 0) >= today
-        ); // Tasks from today onward
-        const archived = tasks.filter(
-          (task) => new Date(task.scheduledAt).setHours(0, 0, 0, 0) < today
-        ); // Tasks before today
-
+        const currTime = new Date();
+  
+        const pending = tasks.filter(task => new Date(task.scheduledAt) >= currTime);
+        const archived = tasks.filter(task => new Date(task.scheduledAt) < currTime);
+  
+        // Set tasks and their counts
         setPendingTasks(pending);
-        setPendingCount(pending.length);
-
         setArchivedTasks(archived);
+        setPendingCount(pending.length);
         setArchivedCount(archived.length);
       } else {
+        // Handle case where no tasks are returned
         setPendingTasks([]);
-        setPendingCount(0);
         setArchivedTasks([]);
+        setPendingCount(0);
         setArchivedCount(0);
         console.log('No pending or archived tasks available');
       }
@@ -61,7 +57,7 @@ const TasksContextProvider = ({ children }) => {
       console.error('Error occurred while fetching pending tasks', err);
     }
   };
-
+  
   // Function to fetch completed tasks (unchanged)
   const fetchCompletedTasks = async () => {
     try {
@@ -84,6 +80,62 @@ const TasksContextProvider = ({ children }) => {
     }
   };
 
+  const updateTask = async (task) => {
+    try {
+      const response = await axios.put(`${server}/tasks/updateTask?id=${task._id}`, task, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        },
+      });
+      return response.data
+    } catch (err) {
+      console.error("Error Occured While updating tasks", err.message)
+    }
+  }
+
+  const markComplete = async (task) => {
+    try {
+      const response = await axios.put(`${server}/tasks/setCompleted`, task,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        params:{
+          id: task._id
+        }
+      })
+      return response.data;
+    } catch (err) {
+      console.error("Error Occured While marking task as completed", err.message);
+    }
+  }
+
+  const deleteTask = async (id) => {
+    try {
+      const response = await axios.delete(`${server}/tasks/deleteTask` ,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        },
+        params:{ id }
+      })
+      return response.data;
+    } catch (err) {
+      console.error("Error Occured While marking task as completed", err.message);
+    }
+  }
+
+  const deleteAllCompleted = async () => {
+    try {
+      const response = await axios.delete(`${server}/tasks/deleteAll`,{
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      })
+      return response.data;
+    } catch (err) {
+      console.error("Error Occured While marking task as completed", err.message);
+    }
+  }
+
   const values = {
     completedCount,
     completedTasks,
@@ -94,6 +146,10 @@ const TasksContextProvider = ({ children }) => {
     addTasks,
     fetchPendingTasks,
     fetchCompletedTasks,
+    updateTask,
+    markComplete,
+    deleteTask,
+    deleteAllCompleted,
   };
 
   return (

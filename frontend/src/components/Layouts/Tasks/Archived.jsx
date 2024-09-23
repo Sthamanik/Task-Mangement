@@ -1,4 +1,5 @@
-import React from 'react';
+import { CircleX, EllipsisVertical, Pen, Trash2 } from 'lucide-react';
+import React, { useState } from 'react';
 
 // Helper function to group tasks by their archived date
 const groupTasksByDate = (tasks) => {
@@ -12,7 +13,11 @@ const groupTasksByDate = (tasks) => {
   }, {});
 };
 
-const Archived = ({ archivedTasks, archivedCount }) => {
+const Archived = ({ archivedTasks, archivedCount, onEditTask }) => {
+  const [clickedIndex, setClickedIndex] = useState(null);
+  const [hoverEdit, setHoverEdit] = useState(false);
+  const [hoverDelete, setHoverDelete] = useState(false);
+
   const groupedTasks = groupTasksByDate(archivedTasks);
 
   // Sort archived tasks so that the most recent archived tasks appear first
@@ -42,28 +47,43 @@ const Archived = ({ archivedTasks, archivedCount }) => {
                 </h2>
               </div>
 
-              {/* Tasks for the Date - Use grid layout here */}
+              {/* Tasks for the Date */}
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pl-8 relative">
                 {groupedTasks[date].map((task, taskIndex) => (
-                  <div
-                    key={taskIndex}
-                    className="bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
-                  >
-                    <h3 className="text-lg font-semibold text-gray-800">
-                      {task.title}
-                    </h3>
-                    <p className="text-gray-700 mt-2">{task.description}</p>
-                    <span className="text-gray-500 block mt-3 text-sm">
-                      Archived on: {new Date(task.scheduledAt).toLocaleTimeString()}
-                    </span>
-                  </div>
-                ))}
+                    <div
+                      key={task._id}
+                      className="relative bg-gray-100 p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300"
+                    >
+                      <div className='absolute right-2 top-4 hover:cursor-pointer flex flex-row-reverse'>
+                        {clickedIndex === task._id ? (
+                          <CircleX onClick={() => setClickedIndex(null)} />
+                        ) : (
+                          <EllipsisVertical onClick={() => setClickedIndex(task._id)} />
+                        )}
+                        <div className={`flex flex-col space-y-2 ${clickedIndex === task._id ? 'translate-x-0 translate-y-0 scale-100' : 'translate-x-10 -translate-y-10 scale-0'} transition-all duration-200 ease-in-out mr-2`}>
+                          <button className='flex flex-row-reverse items-center text-gray-700 hover:text-blue-700'>
+                            <Pen onMouseEnter={() => setHoverEdit(true)} onMouseLeave={() => setHoverEdit(false)} onClick={() => onEditTask(task)} />
+                            {hoverEdit && <p className='text-sm font-semibold mr-1 text-blue-400'>Edit</p>}
+                          </button>
+                          <button className='flex flex-row-reverse items-center text-gray-700 hover:text-red-700'>
+                            <Trash2 onMouseEnter={() => setHoverDelete(true)} onMouseLeave={() => setHoverDelete(false)} />
+                            {hoverDelete && <p className='text-sm font-semibold mr-1 text-red-400'>Delete</p>}
+                          </button>
+                        </div>
+                      </div>
 
+                      <h3 className="text-lg font-semibold text-gray-800">{task.title}</h3>
+                      <p className="text-gray-700 mt-2">{task.description}</p>
+                      <span className="text-gray-500 block mt-3 text-sm">
+                        Archived on: {new Date(task.scheduledAt).toLocaleTimeString()}
+                      </span>
+                    </div>
+                  ))}
                 {/* Timeline Dot */}
                 <span className="absolute top-0 left-[-9px] h-4 w-4 bg-gray-600 rounded-full"></span>
               </div>
 
-              {/* Vertical Divider (vrads) between different date sections */}
+              {/* Vertical Divider between different date sections */}
               {index < sortedDates.length - 1 && (
                 <div className="w-full h-1 border-t border-gray-300 mt-6"></div>
               )}

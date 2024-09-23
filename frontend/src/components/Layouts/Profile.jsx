@@ -61,22 +61,7 @@ const Profile = ({tasks}) => {
           >
             Change Password
           </a>
-          <a
-            href="#"
-            className="text-indigo-600 hover:underline transition-all"
-          >
-            Notification Preferences
-          </a>
         </div>
-      </div>
-
-      {/* Achievements Section */}
-      <div className="p-4 w-full">
-        <h3 className="font-semibold mb-2">Achievements</h3>
-        <p className="text-gray-800">
-          You’ve completed <span className="font-bold">30 tasks</span> this month!
-          Keep up the great work!
-        </p>
       </div>
     </div>
   );
